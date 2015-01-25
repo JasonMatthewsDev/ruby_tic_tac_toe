@@ -13,7 +13,8 @@ module TicTacToe
 			until winner || full?
 				@board.draw_board
 				move = get_input - 1
-				if move && @board.get_square(move) != @player1.symbol && @board.get_square(move) != @player2.symbol
+				if move && @board.get_square(move) != @player1.symbol && @board.get_square(move) != @player2.symbol && @board.get_square(move)
+					
 					@board.set_square(move, @current_player.symbol)
 					swap_players
 				else
