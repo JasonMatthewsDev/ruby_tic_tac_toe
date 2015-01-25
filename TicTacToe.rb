@@ -12,12 +12,12 @@ module TicTacToe
 
 			until winner || full?
 				@board.draw_board
-				move = get_input
-				if move && @board.get_square(move) == ' '
+				move = get_input - 1
+				if move && @board.get_square(move) != @player1.symbol && @board.get_square(move) != @player2.symbol
 					@board.set_square(move, @current_player.symbol)
 					swap_players
 				else
-					puts "That's not a valid move try again"
+					puts "That's not a valid move try again."
 				end
 			end
 
@@ -30,14 +30,10 @@ module TicTacToe
 		end
 
 		def winner
-			wins = [[{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}],
-					[{x: 0, y: 1}, {x: 1, y: 1}, {x: 2, y: 1}],
-					[{x: 0, y: 2}, {x: 1, y: 2}, {x: 2, y: 2}],
-					[{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}],
-					[{x: 1, y: 0}, {x: 1, y: 1}, {x: 1, y: 2}],
-					[{x: 2, y: 0}, {x: 2, y: 1}, {x: 2, y: 2}],
-					[{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}],
-					[{x: 2, y: 0}, {x: 1, y: 1}, {x: 0, y: 2}]]
+			wins = [[0, 1, 2], [3, 4, 5],
+					[6, 7, 8], [0, 3, 6],
+					[1, 4, 7], [2, 5, 8],
+					[0, 4, 8], [2, 4, 6]]
 
 			wins.each do |n|
 				if n.all? { |i| @board.get_square(i) == @player1.symbol }
@@ -51,28 +47,24 @@ module TicTacToe
 		end
 
 		def full?
-			3.times do |x|
-				3.times { |y| return false if @board.get_square({x: x, y: y}) == ' ' }
-			end
+			9.times { |x| return false if (1..9).include?(@board.get_square(x))}
 
 			true
 		end
 
 		def get_input
-			print "#{@current_player.name} enter your move coordinates as x, y: "
+			print "#{@current_player.name} enter your move (1-9): "
 			input = gets.chomp
-			if !input.index(', ')
-				puts 'That is not a valid input, please use the format x, y'
-				return false
-			end
-			input = input.split(', ')
+			
 
 			begin
-				{x: input[1].to_i - 1, y: input[0].to_i - 1}
+				input = input.to_i
 			rescue
 				puts 'That is not a valid input'
 				return nil
 			end
+
+			input
 		end
 	end
 
@@ -81,28 +73,25 @@ module TicTacToe
 	class Board
 
 		def initialize
-			@board = [[' ', ' ', ' '],
-					  [' ', ' ', ' '],
-					  [' ', ' ', ' ']]
+			@board = (1..9).to_a
 		end
 
 		def get_square(square)
 			begin	
-				@board[square[:x]][square[:y]]
+				@board[square]
 			rescue
 				return nil
 			end
 		end
 
 		def set_square(square, symbol)
-			@board[square[:x]][square[:y]] = symbol
+			@board[square] = symbol
 		end
 
 		def draw_board
-			puts 'Y|X 1   2   3'
-			@board.each_with_index do |i, n|
-				line = "#{n + 1}|"
-				i.each { |s| line += " [#{s}]" }
+			3.times do |i|
+				line = ''
+				3.times { |x| line += " [#{@board[(3 * i) + x]}]" }
 				puts line
 			end
 		end
