@@ -40,7 +40,6 @@ module TicTacToe
 					[{x: 2, y: 0}, {x: 1, y: 1}, {x: 0, y: 2}]]
 
 			wins.each do |n|
-				#n.each { |x| puts x }
 				if n.all? { |i| @board.get_square(i) == @player1.symbol }
 					return @player1
 				elsif n.all? { |i| @board.get_square(i) == @player2.symbol }
@@ -53,7 +52,6 @@ module TicTacToe
 
 		def full?
 			3.times do |x|
-				#3.times { |y| puts @board.get_square({x: x, y: y}) }
 				3.times { |y| return false if @board.get_square({x: x, y: y}) == ' ' }
 			end
 
